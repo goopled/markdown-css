@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 #
 # Copyright 2016 Wecatch
@@ -12,8 +12,7 @@
 
 """Markdown css tools."""
 
-from __future__ import (
-    absolute_import, division, print_function, with_statement)
+from __future__ import absolute_import, division, print_function
 
 import logging
 from collections import defaultdict

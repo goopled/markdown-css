@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 from __future__ import absolute_import, print_function
 
 import os
-import codecs
 from docopt import docopt
 from pyquery import PyQuery
 from markdown_css import parse_style
@@ -19,7 +18,7 @@ def special_process_wechat_ol_ul(html):
     while len(html("ul")) > 0:
         result = []
         for li in html("ul").eq(0).find("li"):
-            result.append(u'<span style="display:block" ><span style="margin-right: 10px;" >•</span>' + PyQuery(li).html() + '</span>')
+            result.append('<span style="display:block" ><span style="margin-right: 10px;" >•</span>' + PyQuery(li).html() + '</span>')
 
         html("ul").eq(0).replaceWith('<p>' + ''.join(result) + '</p>')
 
@@ -27,7 +26,7 @@ def special_process_wechat_ol_ul(html):
         result = []
         index = 1
         for li in html("ol").eq(0).find("li"):
-            result.append(u'<span style="display:block" ><span style="margin-right: 10px;" >' +
+            result.append('<span style="display:block" ><span style="margin-right: 10px;" >' +
                           str(index) + '.</span>' + PyQuery(li).html() + '</span>')
             index += 1
 
@@ -69,7 +68,7 @@ def highlightcode(lang, code):
 
 def main(input_file, out, style, name, render, codehighlight):
     if not os.path.isdir(out):
-        print(u'warning : %s is not a dir' % out)
+        print('warning : %s is not a dir' % out)
         return
 
     if not name.endswith('.html'):
@@ -77,13 +76,16 @@ def main(input_file, out, style, name, render, codehighlight):
 
     out_path = os.path.join(out, name)
     if not os.path.isfile(style):
-        print(u'warning : %s is not file' % style)
+        print('warning : %s is not file' % style)
         return
 
-    in_f = codecs.open(input_file, 'r', 'utf-8')
-    out_f = codecs.open(out_path, 'w', 'utf-8')
-    e_list, e_dict, p_list = parse_style(codecs.open(style, 'r', 'utf-8').read())
-    content = in_f.read()
+    with open(input_file, 'r', encoding='utf-8') as in_f:
+        content = in_f.read()
+    
+    with open(style, 'r', encoding='utf-8') as style_f:
+        style_content = style_f.read()
+    
+    e_list, e_dict, p_list = parse_style(style_content)
     html = PyQuery(content)
     if render == 'wechat':
         html = special_process_wechat_ol_ul(html)
@@ -103,14 +105,15 @@ def main(input_file, out, style, name, render, codehighlight):
         style('style').html('\n'.join(p_list))
         html('head').append(style)
 
-    out_f.write(html.html(method='html'))
+    with open(out_path, 'w', encoding='utf-8') as out_f:
+        out_f.write(html.html(method='html'))
 
 
 if __name__ == '__main__':
     helpdoc = """markdown-css command line.
     Usage:
     markdown-css (-h | --help)
-    markdown-css <input> [--out=<out>] [--name=<name>] [--style=<style>] [--render=<render>]
+    markdown-css <input> [--out=<out>] [--name=<name>] [--style=<style>] [--render=<render>] [--codehighlight=<codehighlight>]
 
     Options:
     -h,  --help        Show help document
