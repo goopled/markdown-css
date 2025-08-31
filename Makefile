@@ -56,17 +56,17 @@ install: clean ## 安装包到当前Python环境
 
 test: ## 运行Python3兼容性测试
 	@echo "$(YELLOW)运行Python3兼容性测试...$(NC)"
-	@$(PYTHON) test_python3_compatibility.py
+	@$(PYTHON) tests/test_python3_compatibility.py
 	@echo "$(GREEN)兼容性测试完成$(NC)"
 
 test-themes: ## 测试所有主题样式
 	@echo "$(YELLOW)测试所有主题样式...$(NC)"
-	@$(PYTHON) test_themes.py
+	@$(PYTHON) tests/test_themes.py
 	@echo "$(GREEN)主题测试完成$(NC)"
 
 test-single: ## 测试单个主题 (使用: make test-single THEME=simple)
 	@echo "$(YELLOW)测试主题: $(THEME)$(NC)"
-	@$(PYTHON) test_themes.py test $(THEME)
+	@$(PYTHON) tests/test_themes.py test $(THEME)
 	@echo "$(GREEN)主题 $(THEME) 测试完成$(NC)"
 
 test-all: test test-themes ## 运行所有测试
@@ -74,28 +74,28 @@ test-all: test test-themes ## 运行所有测试
 
 report: test-themes ## 生成测试报告
 	@echo "$(YELLOW)生成测试报告...$(NC)"
-	@$(PYTHON) generate_test_report.py
+	@$(PYTHON) tests/generate_test_report.py
 	@echo "$(GREEN)测试报告生成完成$(NC)"
-	@echo "$(BLUE)报告位置: test_output/TEST_REPORT.md$(NC)"
-	@echo "$(BLUE)索引页面: test_output/index.html$(NC)"
+	@echo "$(BLUE)报告位置: output/test_output/TEST_REPORT.md$(NC)"
+	@echo "$(BLUE)索引页面: output/test_output/index.html$(NC)"
 
 open-report: ## 在浏览器中打开测试报告
 	@echo "$(YELLOW)打开测试报告...$(NC)"
-	@$(PYTHON) -c "import webbrowser; webbrowser.open('file://$(shell pwd)/test_output/index.html')"
+	@$(PYTHON) -c "import webbrowser; webbrowser.open('file://$(shell pwd)/output/test_output/index.html')"
 
 list-themes: ## 列出所有可用主题
 	@echo "$(YELLOW)可用主题列表:$(NC)"
-	@$(PYTHON) test_themes.py list
+	@$(PYTHON) tests/test_themes.py list
 
 demo: ## 运行演示 (使用simple主题)
 	@echo "$(YELLOW)运行演示...$(NC)"
-	@mkdir -p demo_output
-	@$(PYTHON) markdown_css/bin/markdown-css themes/markdown.html --style=themes/simple.css --out=demo_output --name=demo.html --codehighlight=yes
-	@echo "$(GREEN)演示文件生成: demo_output/demo.html$(NC)"
+	@mkdir -p output/demo_output
+	@$(PYTHON) markdown_css/bin/markdown-css themes/markdown.html --style=themes/simple.css --out=output/demo_output --name=demo.html --codehighlight=yes
+	@echo "$(GREEN)演示文件生成: output/demo_output/demo.html$(NC)"
 
 demo-open: demo ## 运行演示并在浏览器中打开
 	@echo "$(YELLOW)打开演示文件...$(NC)"
-	@$(PYTHON) -c "import webbrowser; webbrowser.open('file://$(shell pwd)/demo_output/demo.html')"
+	@$(PYTHON) -c "import webbrowser; webbrowser.open('file://$(shell pwd)/output/demo_output/demo.html')"
 
 dist: clean ## 构建分发包
 	@echo "$(YELLOW)构建分发包...$(NC)"
@@ -138,8 +138,7 @@ clean-test: ## 清理测试文件
 
 clean-output: ## 清理输出文件
 	@echo "$(YELLOW)清理输出文件...$(NC)"
-	@rm -rf test_output/
-	@rm -rf demo_output/
+	@rm -rf output/
 	@rm -rf public/
 	@echo "$(GREEN)输出文件清理完成$(NC)"
 
@@ -165,7 +164,7 @@ ci: test-all report ## CI/CD流程
 .PHONY: quick-test
 quick-test: ## 快速测试 (只测试simple主题)
 	@echo "$(YELLOW)快速测试...$(NC)"
-	@$(PYTHON) test_themes.py test simple
+	@$(PYTHON) tests/test_themes.py test simple
 	@echo "$(GREEN)快速测试完成$(NC)"
 
 .PHONY: validate

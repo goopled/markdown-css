@@ -1,6 +1,16 @@
 markdown-css changes log
 =====================
 
+## 0.0.8
+
+- Migrate from Python2 to Python3
+- Update dependencies to support Python3
+- Fix string handling and file operations
+- Add comprehensive test suite
+- Add Makefile with full automation
+- Fix command line argument parsing
+- Improve code compatibility and maintainability
+
 ## 0.0.5
 
 - fix [#5](https://github.com/wecatch/markdown-css/issues/5)
